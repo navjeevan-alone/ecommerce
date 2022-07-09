@@ -1,10 +1,10 @@
-things we had don
+things we had done
 
-1.  add navbar
-2.  create basic routes
-3.  signIn ,logIn, logOut
-4.  displayuser name in navbar
-
+-  add navbar
+-  create basic routes
+-  signIn ,logIn, logOut
+-  displayuser name in navbar
+- created basic home page layout and product card
 yet to be done
 
 - redirect to home if logged in
