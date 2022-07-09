@@ -1,28 +1,34 @@
 import React, { useRef, useState } from "react";
-import { Form, Card, Button } from "react-bootstrap";
+import { Form, Card, Button, Alert } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import { reducer, ACT } from "../reducer";
-import { useStateValue } from "../StateProvider";
+import { reducer, ACT, registerUser } from "../reducer";
+
 function Signup() {
-	const [dispatch] = useStateValue();
+	const [displayName, setDisplayName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [confirmPassword, setConfirmPassword] = useState("");
-
+	//
+	const [error, setError] = useState("");
+	const [loading, setLoading] = useState(false);
+	const [message, setMessage] = useState("");
+	//
 	const handleSignup = (e) => {
 		e.preventDefault();
+		setLoading(true);
 		if (password === confirmPassword) {
-			dispatch({
-				type: ACT.REGISTER_USER,
-				payload: { email: email, password: password },
-			});
+			registerUser(email, password, displayName);
 		} else {
-			console.log("can't sign in user");
+			setError(true);
+			setMessage("can't sign in user");
 		}
+		setDisplayName("");
 		setEmail("");
 		setPassword("");
 		setConfirmPassword("");
+		return setLoading(false);
 	};
+
 	return (
 		<div style={{ maxWidth: "25rem", margin: " 1rem auto" }}>
 			<Card>
@@ -36,12 +42,33 @@ function Signup() {
 				</Card.Header>
 				<Card.Body>
 					<Form onSubmit={handleSignup}>
+						{loading && <p>Loading...</p>}
+						{error && (
+							<Alert
+								key={message}
+								variant='danger'
+								onClose={() => setError(!error)}
+								dismissible>
+								{message}
+							</Alert>
+						)}
+
+						<Form.Group className='mb-3'>
+							<Form.Control
+								value={displayName}
+								onChange={(e) => setDisplayName(e.target.value)}
+								type='text'
+								placeholder='Name'
+								required
+							/>
+						</Form.Group>
 						<Form.Group className='mb-3'>
 							<Form.Control
 								value={email}
 								onChange={(e) => setEmail(e.target.value)}
 								type='email'
 								placeholder='Email'
+								required
 							/>
 						</Form.Group>
 						<Form.Group className='mb-3'>
@@ -50,6 +77,7 @@ function Signup() {
 								onChange={(e) => setPassword(e.target.value)}
 								type='password'
 								placeholder='Password'
+								required
 							/>
 						</Form.Group>
 						<Form.Group className='mb-3'>
@@ -58,6 +86,7 @@ function Signup() {
 								onChange={(e) => setConfirmPassword(e.target.value)}
 								type='password'
 								placeholder='Confirm Password'
+								required
 							/>
 						</Form.Group>
 						<Button variant='primary' type='submit'>

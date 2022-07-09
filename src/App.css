@@ -1,7 +1,13 @@
 * {
 	font-family: "poppins", sans-serif;
 }
-a {
-	text-decoration: none;
+.user-displayname > a:first-child {
 	color: #fff;
+	font-weight: 600;
+	text-transform: capitalize;
+}
+a.forget-password.nav-link {
+	display: initial;
+	float: right;
+	padding-right: 0;
 }

@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Form, Card, Button } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { loginUser } from "../reducer";
 function Login() {
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const handleLogin = (e) => {
 		e.preventDefault();
+		loginUser(email, password);
 
 		setEmail("");
 		setPassword("");
@@ -42,6 +44,9 @@ function Login() {
 						<Button type='submit' variant='primary'>
 							Login
 						</Button>
+						<Link className='forget-password nav-link' to='/forgot-password'>
+							Forgot password?
+						</Link>
 					</Form>
 				</Card.Body>
 			</Card>
