@@ -1,17 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Form, Card, Button } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../reducer";
+import ForgotPassword from "./ForgotPassword";
+import { StateContext } from "../ContextProvider";
 function Login() {
+	const { state, dispatch } = useContext(StateContext);
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const navigate = useNavigate();
 	const handleLogin = (e) => {
 		e.preventDefault();
 		loginUser(email, password);
-
 		setEmail("");
 		setPassword("");
+		navigate("/");
 	};
+
 	return (
 		<div style={{ maxWidth: "25rem", margin: " 1rem auto" }}>
 			<Card>
@@ -44,12 +49,10 @@ function Login() {
 						<Button type='submit' variant='primary'>
 							Login
 						</Button>
-						<Link className='forget-password nav-link' to='/forgot-password'>
-							Forgot password?
-						</Link>
 					</Form>
 				</Card.Body>
 			</Card>
+			<ForgotPassword />
 			<p style={{ textAlign: "center", margin: "1rem auto" }}>
 				Need an Account? <Link to='/signup'>Sign Up</Link>
 			</p>

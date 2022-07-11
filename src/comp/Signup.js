@@ -1,9 +1,10 @@
 import React, { useRef, useState } from "react";
 import { Form, Card, Button, Alert } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { reducer, ACT, registerUser } from "../reducer";
 
 function Signup() {
+	const navigate = useNavigate();
 	const [displayName, setDisplayName] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
@@ -26,7 +27,8 @@ function Signup() {
 		setEmail("");
 		setPassword("");
 		setConfirmPassword("");
-		return setLoading(false);
+		setLoading(false);
+		navigate("/");
 	};
 
 	return (

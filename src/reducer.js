@@ -1,18 +1,21 @@
-import { useEffect } from "react";
+import { useContext } from "react";
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
 	updateProfile,
 	signOut,
+	sendPasswordResetEmail,
 } from "firebase/auth";
 import { auth } from "./firebase-config";
+import { StateContext } from "./ContextProvider";
 export const initialState = {
-	basket: [],
+	basket: [1, 2, 3],
 	products: [],
 	total: 0,
 	user: null,
 	uid: null,
 	displayName: null,
+	isLoggedIn: false,
 };
 export const userDetails = {
 	// user: null,
@@ -34,19 +37,20 @@ export const registerUser = async (
 			email,
 			password
 		);
-		// dispatch({ type: "set-displayname", name: displayUserName });
+
 		await updateProfile(auth.currentUser, { displayName: displayUserName });
-		// const user = userCredential.user;
-		// updateDisplayName(displayUserName);
 	} catch (error) {
 		console.log(error.message);
 	}
 };
-const updateDisplayName = async (displayUserName) => {
+export const updateUser = async ({
+	email = auth.currentUser.email,
+	displayName = auth.currentUser.displayName,
+}) => {
 	try {
-		// dispatch({ type: "set-displayname", name: displayUserName });
 		return await updateProfile(auth.currentUser, {
-			displayName: displayUserName,
+			displayName: displayName,
+			email: email,
 		});
 	} catch (error) {
 		console.log("can't update name");
@@ -72,18 +76,42 @@ export const signoutUser = async () => {
 		console.log(error.message);
 	}
 };
+export const resetEmail = async (email) => {
+	try {
+		const sendResetPassword = await sendPasswordResetEmail(auth, email);
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+export const deleteUser = async () => {
+	try {
+		await deleteUser(auth.currentUser);
+	} catch (error) {
+		console.log(error.message);
+	}
+};
 
 // main reducer function
 
 export default function reducer(state, action) {
 	switch (action.type) {
 		case "set-user":
-			return { ...state, user: action.user, uid: action.uid };
+			return {
+				...state,
+				...action.userDetails,
+			};
 		case "set-username":
 			return { ...state, displayName: action.name };
 		case "logout":
 			signoutUser();
-			return { ...state, user: null, uid: null };
+			return { ...state, user: null, uid: null, isLoggedIn: false };
+		case "update-user":
+			console.log({ ...action.payload });
+			updateUser({ ...action.payload });
+			return { ...state, displayName: action.payload.username };
+		case "delete-user":
+			deleteUser();
+			return { ...state, user: null, uid: null, isLoggedIn: false };
 		case "run":
 			return console.log("dispatch running");
 	}

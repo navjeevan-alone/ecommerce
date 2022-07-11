@@ -1,6 +1,6 @@
-import React, { useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { Navbar, Container, Nav, Button, NavDropdown } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signoutUser } from "../reducer";
 import { auth } from "../firebase-config";
 import { signOut } from "firebase/auth";
@@ -8,6 +8,15 @@ import { StateContext } from "../ContextProvider";
 
 function Header() {
 	const { state, dispatch } = useContext(StateContext);
+	// super important to display username instantly in header
+	const [username, setUsername] = useState("loading...");
+	useEffect(() => {
+		auth.currentUser !== null && // check if current user is not null
+			auth.currentUser.displayName !== null && //then displayname is not null
+			setUsername(auth.currentUser.displayName); // only then render displayName
+	}, [auth.currentUser?.displayName]);
+	// the end of super important
+	const navigate = useNavigate();
 	return (
 		<Navbar bg='dark' variant='dark'>
 			<Container>
@@ -17,17 +26,26 @@ function Header() {
 						Home
 					</Link>
 					<Link to='/cart' className='nav-link'>
-						Cart
+						Cart ({state.basket.length})
 					</Link>
 				</Nav>
 				{state.user ? (
 					<NavDropdown
-						title={auth.currentUser?.displayName}
+						title={username}
 						style={{ color: "#ffffff" }}
 						className='user-displayname'>
-						<NavDropdown.Item>Profile</NavDropdown.Item>
-						<NavDropdown.Item>Cart</NavDropdown.Item>
-						<NavDropdown.Item onClick={() => dispatch({ type: "logout" })}>
+						<Link to='/profile' className='dropdown-item'>
+							Profile
+						</Link>
+						<Link to='/cart' className='dropdown-item'>
+							Cart ({state.basket.length})
+						</Link>
+						<NavDropdown.Item
+							style={{ color: "var(--bs-red)" }}
+							onClick={() => {
+								dispatch({ type: "logout" });
+								navigate("/login");
+							}}>
 							Logout
 						</NavDropdown.Item>
 					</NavDropdown>
@@ -36,9 +54,6 @@ function Header() {
 						<Button variant='primary'>Login</Button>
 					</Link>
 				)}
-				{/* {auth.currentUser !== null
-					? console.log(auth.currentUser.displayName, "is logged in")
-					: console.log("no one is logged in")} */}
 			</Container>
 		</Navbar>
 	);
