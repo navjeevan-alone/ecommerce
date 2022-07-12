@@ -14,7 +14,25 @@ a.forget-password.nav-link {
 .modal-content {
 	padding: 1rem;
 }
-
+.list-group-item {
+	max-height: 12rem;
+}
+.list-group-item img {
+	flex: 1 1 20rem;
+	object-fit: contain;
+}
+.bottom-group select {
+	word-wrap: normal;
+	width: -webkit-fill-available;
+	height: 2rem;
+	border: 1px solid #ccc;
+	outline: none;
+	border-radius: 4px;
+}
+select#quantity:hover,
+select#quantity:focus {
+	border-color: #0a0a0a;
+}
 /* demo css */
 /* .outer-div {
 	max-width: 15rem;

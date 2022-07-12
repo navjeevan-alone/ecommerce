@@ -8,6 +8,7 @@ import {
 } from "firebase/auth";
 import { auth } from "./firebase-config";
 import { StateContext } from "./ContextProvider";
+
 export const initialState = {
 	basket: [1, 2, 3],
 	products: [],

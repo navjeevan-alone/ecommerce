@@ -8,6 +8,7 @@ import Signup from "./comp/Signup";
 import Home from "./comp/Home";
 import Profile from "./comp/Profile";
 import Cart from "./comp/Cart";
+import GradientCard from "./comp/GradientCard";
 import "./App.css";
 import { Button } from "react-bootstrap";
 import { StateContext } from "./ContextProvider"; //import context
@@ -70,6 +71,7 @@ function App() {
 					path='/cart'
 					element={isLoggedIn ? <Cart /> : <Navigate to='/' />}
 				/>
+				<Route path='/gradient' element={<GradientCard />} />
 			</Routes>
 		</div>
 	);

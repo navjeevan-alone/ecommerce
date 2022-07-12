@@ -9,8 +9,6 @@ function Home() {
 					padding: ".5rem",
 					fontSize: "18px",
 					fontWeight: 500,
-					// border: "none",
-					// boxShadow: " 1px 2px 4px 0px #9f9898",
 					margin: ".5rem auto",
 				}}>
 				Products
@@ -29,7 +27,7 @@ function Home() {
 							Windows 10 Laptop(Windows 11 Free Upgrade)
 						</Card.Text>
 						<Card.Title>₹49,550</Card.Title>
-						<Button variant='warning'>Add to Cart</Button>
+						{/* <Button variant='warning'>Add to Cart</Button> */}
 					</Card.Body>
 				</Card>
 			</div>
