@@ -33,6 +33,13 @@ select#quantity:hover,
 select#quantity:focus {
 	border-color: #0a0a0a;
 }
+.fade.section-title.alert.alert-primary.show {
+	padding: 0.5rem;
+	font-size: 18px;
+	font-weight: 500;
+	margin: 0.5rem auto;
+}
+
 /* demo css */
 /* .outer-div {
 	max-width: 15rem;

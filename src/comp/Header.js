@@ -26,7 +26,7 @@ function Header() {
 						Home
 					</Link>
 					<Link to='/cart' className='nav-link'>
-						Cart ({state.basket.length})
+						Cart ({state?.basket.length})
 					</Link>
 				</Nav>
 				{state.user ? (
@@ -38,7 +38,7 @@ function Header() {
 							Profile
 						</Link>
 						<Link to='/cart' className='dropdown-item'>
-							Cart ({state.basket.length})
+							Cart ({state?.basket.length})
 						</Link>
 						<NavDropdown.Item
 							style={{ color: "var(--bs-red)" }}

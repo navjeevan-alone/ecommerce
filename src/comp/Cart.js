@@ -1,18 +1,13 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Container, Alert, Card, Button, ListGroup } from "react-bootstrap";
 import CartItem from "./CartItem";
 import CurrencyFormat from "react-currency-format";
+import { StateContext } from "../ContextProvider"; //import context
 function Cart() {
+	const { state, dispatch } = useContext(StateContext);
 	return (
-		<Container>
-			<Alert
-				variant='primary'
-				style={{
-					padding: ".5rem",
-					fontSize: "18px",
-					fontWeight: 500,
-					margin: ".5rem auto",
-				}}>
+		<Container className='py-2'>
+			<Alert variant='primary' className='section-title'>
 				Shopping Cart
 			</Alert>
 			<ListGroup>

@@ -1,6 +1,6 @@
 import React, { useEffect, useContext, useState } from "react";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "./firebase-config";
+import { auth, db } from "./firebase-config";
 import { Link, Routes, Route, Navigate } from "react-router-dom";
 import Header from "./comp/Header";
 import Login from "./comp/Login";
@@ -12,10 +12,40 @@ import GradientCard from "./comp/GradientCard";
 import "./App.css";
 import { Button } from "react-bootstrap";
 import { StateContext } from "./ContextProvider"; //import context
+import { collection, addDoc, getDocs } from "firebase/firestore";
 
 function App() {
 	const { state, dispatch } = useContext(StateContext); //useContext destructure values
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	dispatch({ type: "run" });
+	const addData = async () => {
+		try {
+			const docRef = await addDoc(collection(db, "products"), {
+				title:
+					"Noise ColorFit Caliber Smartwatch  (Black Strap, Regular)#JustHere",
+				imgSrc:
+					"https://rukminim1.flixcart.com/image/416/416/ky0g58w0/smartwatch/o/n/8/-original-imagac74kujhzzrc.jpeg?q=70",
+				price: 2199,
+				isInCart: false,
+				quantity: 0,
+			});
+			console.log("Document written with ID: ", docRef.id);
+		} catch (e) {
+			console.error("Error adding document: ", e);
+		}
+	};
+	const getProductsData = async () => {
+		try {
+			const querySnapshot = await getDocs(collection(db, "products"));
+			let array = [];
+			querySnapshot.forEach((doc) => {
+				array.push({ ...doc.data(), id: doc.id });
+			});
+			dispatch({ type: "set-products", productsArray: array });
+		} catch (error) {
+			console.log(error.message);
+		}
+	};
 	useEffect(() => {
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
@@ -36,7 +66,8 @@ function App() {
 				setIsLoggedIn(false) && console.log(isLoggedIn);
 			}
 		});
-
+		// addData();
+		getProductsData();
 		return () => unsubscribe();
 	}, []);
 	return (

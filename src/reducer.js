@@ -10,7 +10,7 @@ import { auth } from "./firebase-config";
 import { StateContext } from "./ContextProvider";
 
 export const initialState = {
-	basket: [1, 2, 3],
+	basket: [],
 	products: [],
 	total: 0,
 	user: null,
@@ -113,6 +113,15 @@ export default function reducer(state, action) {
 		case "delete-user":
 			deleteUser();
 			return { ...state, user: null, uid: null, isLoggedIn: false };
+		case "set-products":
+			return { ...state, products: action.productsArray };
+		case "add-to-cart":
+			let basketArray = [...state.basket];
+			const index = basketArray.findIndex((basketItem) => {
+				return basketItem.id === action.id;
+			});
+
+			return { ...state, basket: [...state.basket, state.products[index]] };
 		case "run":
 			return console.log("dispatch running");
 	}
