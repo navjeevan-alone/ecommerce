@@ -18,10 +18,10 @@ export const initialState = {
 	displayName: null,
 	isLoggedIn: false,
 };
-export const userDetails = {
-	// user: null,
-	// userId: null,
-	// isLoggedIn: false,
+export const productState = {
+	basket: [],
+	products: [],
+	total: 0,
 };
 export const ACT = {
 	REGISTER_USER: "REGISTER_USER",

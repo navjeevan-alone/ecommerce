@@ -20,7 +20,7 @@ function Header() {
 	return (
 		<Navbar bg='dark' variant='dark'>
 			<Container>
-				<Navbar.Brand href='#home'>E commerce</Navbar.Brand>
+				<Navbar.Brand>E commerce</Navbar.Brand>
 				<Nav className='me-auto'>
 					<Link to='/' className='nav-link'>
 						Home
@@ -29,7 +29,7 @@ function Header() {
 						Cart ({state?.basket.length})
 					</Link>
 				</Nav>
-				{state.user ? (
+				{state?.user ? (
 					<NavDropdown
 						title={username}
 						style={{ color: "#ffffff" }}
