@@ -6,7 +6,8 @@ import {
 	signOut,
 	sendPasswordResetEmail,
 } from "firebase/auth";
-import { auth } from "./firebase-config";
+import { doc, updateDoc } from "firebase/firestore";
+import { auth, db } from "./firebase-config";
 import { StateContext } from "./ContextProvider";
 
 export const initialState = {
@@ -26,7 +27,84 @@ export const productState = {
 export const ACT = {
 	REGISTER_USER: "REGISTER_USER",
 };
-// other functions
+
+// main reducer function
+
+export default function reducer(state, action) {
+	switch (action.type) {
+		// auth actions
+		case "set-user":
+			return {
+				...state,
+				...action.userDetails,
+			};
+		case "set-username":
+			return { ...state, displayName: action.name };
+		case "logout":
+			signoutUser();
+			return { ...state, user: null, uid: null, isLoggedIn: false };
+		case "update-user":
+			console.log({ ...action.payload });
+			updateUser({ ...action.payload });
+			return { ...state, displayName: action.payload.username };
+		case "delete-user":
+			deleteUser();
+			return { ...state, user: null, uid: null, isLoggedIn: false }; //not working
+		// product actions
+		case "set-products":
+			return { ...state, products: action.productsArray };
+		case "add-to-cart":
+			let productsArray = [...state.products];
+			const index = state.products.findIndex((basketItem) => {
+				return basketItem.id === action.id;
+			});
+			if (index >= 0) {
+				updateProduct(action.id, { isInCart: true });
+				productsArray[index].inInCart = true;
+			} else {
+				console.log("item does not exists");
+			}
+			return {
+				...state,
+				basket: [...state.basket, { ...state.products[index] }],
+				products: [...productsArray],
+			};
+
+		case "remove-from-cart":
+			let basketArray = [...state.basket];
+			let newProductsArray = [...state.products];
+			const indexRemove = state.products.findIndex((basketItem) => {
+				return basketItem.id === action.id;
+			});
+
+			if (indexRemove >= 0) {
+				// console.log(basketArray[indexRemove]);
+				newProductsArray[indexRemove].isInCart = false;
+				basketArray.splice(indexRemove, 1);
+				updateProduct(action.id, { isInCart: false });
+			} else {
+				console.warn(
+					`can't remove product (id :${action.id}) as its not existed`
+				);
+			}
+			return {
+				...state,
+				basket: [...basketArray],
+				products: [...newProductsArray],
+			};
+		case "run":
+			return console.log("dispatch running");
+	}
+}
+// product/firestore funtions
+export const updateProduct = async (id, { ...data }) => {
+	try {
+		await updateDoc(doc(db, "products", id), { ...data });
+	} catch (error) {
+		console.log(error.message);
+	}
+};
+// auth functions
 export const registerUser = async (
 	email,
 	password,
@@ -91,38 +169,3 @@ export const deleteUser = async () => {
 		console.log(error.message);
 	}
 };
-
-// main reducer function
-
-export default function reducer(state, action) {
-	switch (action.type) {
-		case "set-user":
-			return {
-				...state,
-				...action.userDetails,
-			};
-		case "set-username":
-			return { ...state, displayName: action.name };
-		case "logout":
-			signoutUser();
-			return { ...state, user: null, uid: null, isLoggedIn: false };
-		case "update-user":
-			console.log({ ...action.payload });
-			updateUser({ ...action.payload });
-			return { ...state, displayName: action.payload.username };
-		case "delete-user":
-			deleteUser();
-			return { ...state, user: null, uid: null, isLoggedIn: false };
-		case "set-products":
-			return { ...state, products: action.productsArray };
-		case "add-to-cart":
-			let basketArray = [...state.basket];
-			const index = basketArray.findIndex((basketItem) => {
-				return basketItem.id === action.id;
-			});
-
-			return { ...state, basket: [...state.basket, state.products[index]] };
-		case "run":
-			return console.log("dispatch running");
-	}
-}

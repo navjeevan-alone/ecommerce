@@ -15,11 +15,13 @@ import { StateContext } from "./ContextProvider"; //import context
 import { collection, addDoc, getDocs } from "firebase/firestore";
 
 function App() {
+	const [loading, setLoading] = useState(false);
 	const { state, dispatch } = useContext(StateContext); //useContext destructure values
 	const [isLoggedIn, setIsLoggedIn] = useState(false);
-	dispatch({ type: "run" });
+	// dispatch({ type: "run" });
 	const addData = async () => {
 		try {
+			setLoading(true);
 			const docRef = await addDoc(collection(db, "products"), {
 				title:
 					"Noise ColorFit Caliber Smartwatch  (Black Strap, Regular)#JustHere",
@@ -30,25 +32,32 @@ function App() {
 				quantity: 0,
 			});
 			console.log("Document written with ID: ", docRef.id);
+			setLoading(false);
 		} catch (e) {
-			console.error("Error adding document: ", e);
+			setLoading(false);
+			console.error("Error adding document: ", e.message);
 		}
 	};
 	const getProductsData = async () => {
 		try {
+			setLoading(true);
 			const querySnapshot = await getDocs(collection(db, "products"));
 			let array = [];
 			querySnapshot.forEach((doc) => {
 				array.push({ ...doc.data(), id: doc.id });
 			});
 			dispatch({ type: "set-products", productsArray: array });
+			setLoading(false);
 		} catch (error) {
+			setLoading(false);
 			console.log(error.message);
 		}
 	};
 	useEffect(() => {
+		setLoading(true);
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
+				setLoading(true);
 				console.log("user is signed in");
 				const uid = user.uid;
 				dispatch({
@@ -61,18 +70,25 @@ function App() {
 					},
 				});
 				setIsLoggedIn(true) && console.log(isLoggedIn);
+				setLoading(false);
 			} else {
 				console.log("user is signed out");
+				setLoading(false);
 				setIsLoggedIn(false) && console.log(isLoggedIn);
 			}
 		});
 		// addData();
-		getProductsData();
-		return () => unsubscribe();
+
+		return () => {
+			unsubscribe();
+			getProductsData();
+			setLoading(false);
+		};
 	}, []);
 	return (
 		<div className='App'>
 			<Header />
+
 			{/* <Demo /> */}
 			<div className='direct-links d-flex justify-content-center gap-3 '>
 				<Link to='/'>Home</Link>
@@ -81,10 +97,13 @@ function App() {
 				<Link to='/profile'>Profile</Link>
 				<Link to='/cart'>Cart</Link>
 			</div>
+			{loading && <p>loading...</p>}
 			<Routes>
 				<Route
 					path='/'
-					element={isLoggedIn ? <Home /> : <Navigate to='/login' />}
+					element={
+						isLoggedIn ? <Home loading={loading} /> : <Navigate to='/login' />
+					}
 				/>
 				<Route
 					path='/login'
