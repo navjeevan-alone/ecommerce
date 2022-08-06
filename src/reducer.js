@@ -1,4 +1,3 @@
-import { useContext } from "react";
 import {
 	createUserWithEmailAndPassword,
 	signInWithEmailAndPassword,
@@ -8,7 +7,6 @@ import {
 } from "firebase/auth";
 import { doc, updateDoc } from "firebase/firestore";
 import { auth, db } from "./firebase-config";
-import { StateContext } from "./ContextProvider";
 
 export const initialState = {
 	basket: [],
@@ -53,6 +51,9 @@ export default function reducer(state, action) {
 		// product actions
 		case "set-products":
 			return { ...state, products: action.productsArray };
+
+		case "set-cart":
+			return { ...state, basket: action.basket };
 		case "add-to-cart":
 			let productsArray = [...state.products];
 			const index = state.products.findIndex((basketItem) => {
@@ -94,6 +95,8 @@ export default function reducer(state, action) {
 			};
 		case "run":
 			return console.log("dispatch running");
+		default:
+			return state;
 	}
 }
 // product/firestore funtions
@@ -104,6 +107,10 @@ export const updateProduct = async (id, { ...data }) => {
 		console.log(error.message);
 	}
 };
+// const totalFun = (accumulator, currentValue, index) => {
+// 	return accumulator + currentValue.id;
+// };
+// const total = array.reduce(totalFun, 0);
 // auth functions
 export const registerUser = async (
 	email,

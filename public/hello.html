@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+        
+		<title>Page Title</title>
+		<style>
+			.show {
+				display: none;
+			}
+
+			.dropdown-toggle {
+				display: visible;
+				background: green;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="dropdown">
+			<button type="button" class="dropdown-btn">toggle</button>
+			<div class="dropdown-toggle">
+				<ul>
+					<li>Home</li>
+					<li>Dashboard</li>
+					<li>Account</li>
+					<li>Profile</li>
+				</ul>
+				<hr class="dropdown-divider" />
+				<ul>
+					<li>Settings</li>
+					<li>Log out</li>
+				</ul>
+			</div>
+		</div>
+		<div class="dropdown">
+			<button type="button" class="dropdown-btn">toggle</button>
+			<div class="dropdown-toggle">
+				<ul>
+					<li>Home</li>
+					<li>Dashboard</li>
+					<li>Account</li>
+					<li>Profile</li>
+				</ul>
+				<hr class="dropdown-divider" />
+				<ul>
+					<li>Settings</li>
+					<li>Log out</li>
+				</ul>
+			</div>
+		</div>
+		<div class="dropdown">
+			<button type="button" class="dropdown-btn">toggle</button>
+			<div class="dropdown-toggle">
+				<ul>
+					<li>Home</li>
+					<li>Dashboard</li>
+					<li>Account</li>
+					<li>Profile</li>
+				</ul>
+				<hr class="dropdown-divider" />
+				<ul>
+					<li>Settings</li>
+					<li>Log out</li>
+				</ul>
+			</div>
+		</div>
+		<script>
+			const dropdownToggle = document.querySelectorAll(".dropdown-toggle");
+            console.log(dropdownToggle)
+			const dropdownButtons = document.querySelectorAll(".dropdown-btn");
+			dropdownButtons.forEach((btn, index) => {
+				console.log(index);
+				btn.addEventListener("click",()=>{
+                    console.log("clicked on me",dropdownToggle[index],index)
+                 dropdownToggle[index].classList.toggle("show");   
+                });
+			});
+			
+		</script>
+	</body>
+</html>

@@ -54,7 +54,6 @@ function App() {
 		}
 	};
 	useEffect(() => {
-		setLoading(true);
 		const unsubscribe = onAuthStateChanged(auth, (user) => {
 			if (user) {
 				setLoading(true);
@@ -82,14 +81,13 @@ function App() {
 		return () => {
 			unsubscribe();
 			getProductsData();
-			setLoading(false);
+			// setLoading(false);
 		};
 	}, []);
 	return (
 		<div className='App'>
 			<Header />
 
-			{/* <Demo /> */}
 			<div className='direct-links d-flex justify-content-center gap-3 '>
 				<Link to='/'>Home</Link>
 				<Link to='/login'>Login</Link>
@@ -97,7 +95,6 @@ function App() {
 				<Link to='/profile'>Profile</Link>
 				<Link to='/cart'>Cart</Link>
 			</div>
-			{loading && <p>loading...</p>}
 			<Routes>
 				<Route
 					path='/'

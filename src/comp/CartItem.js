@@ -1,21 +1,23 @@
-import React, { useState, useEffect } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { Container, Alert, Card, Button, ListGroup } from "react-bootstrap";
+import { StateContext } from "../ContextProvider";
 import CurrencyFormat from "react-currency-format";
-function CartItem({ title, imgSrc, price, quantity }) {
+function CartItem({ item }) {
+	const { dispatch } = useContext(StateContext);
 	let arr = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, "10+"];
-	const [myQuantity, setMyQuantity] = useState(quantity);
+	const [myQuantity, setMyQuantity] = useState(1);
 	const [show, setShow] = useState(true);
 	useEffect(() => {
 		myQuantity === "10+" && setShow(false);
 	}, [myQuantity]);
 	return (
 		<ListGroup.Item className='d-flex flex-row  gap-3'>
-			<Card.Img variant='top' src={imgSrc} />
+			<Card.Img variant='top' src={item.imgSrc} />
 			<Card.Body style={{ padding: "0", marginTop: "1rem" }}>
-				<Card.Text>{title}</Card.Text>
+				<Card.Text>{item.title}</Card.Text>
 				<Card.Title>
 					<CurrencyFormat
-						value={price}
+						value={item.price}
 						thousandSeparator
 						thousandSpacing='2s'
 						prefix='₹'
@@ -32,10 +34,10 @@ function CartItem({ title, imgSrc, price, quantity }) {
 									value={myQuantity}
 									style={{ width: "100%" }}
 									onChange={(e) => setMyQuantity(e.target.value)}>
-									{arr.map((item) => {
+									{arr.map((value) => {
 										return (
-											<option value={item} key={item}>
-												{item}
+											<option value={value} key={value}>
+												{value}
 											</option>
 										);
 									})}
@@ -56,7 +58,10 @@ function CartItem({ title, imgSrc, price, quantity }) {
 							/>
 						)}
 					</div>
-					<Button variant='danger' size='sm'>
+					<Button
+						variant='danger'
+						size='sm'
+						onClick={() => dispatch({ type: "remove-from-cart", id: item.id })}>
 						Remove item
 					</Button>
 				</div>
@@ -66,18 +71,12 @@ function CartItem({ title, imgSrc, price, quantity }) {
 					{/* <sup>₹</sup> */}
 
 					<CurrencyFormat
-						value={price * myQuantity}
+						value={item.price * myQuantity}
 						thousandSeparator
 						thousandSpacing='2s'
 						prefix='₹'
 						displayType='text'
 					/>
-					{/* <CurrencyFormat
-						value={2456981}
-						displayType={"text"}
-						thousandSeparator={true}
-						prefix={"$"}
-					/> */}
 				</h4>
 			</div>
 		</ListGroup.Item>
@@ -85,3 +84,4 @@ function CartItem({ title, imgSrc, price, quantity }) {
 }
 
 export default CartItem;
+//
